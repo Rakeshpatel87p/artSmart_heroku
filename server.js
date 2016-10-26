@@ -19,7 +19,6 @@ mongoose.connect('mongodb://Rakeshpatel87p:printer1@ds023644.mlab.com:23644/art_
         console.log('Error connecting to database ', err)
         process.exit(1)
     }
-    console.log('connected!')
     db = database
     var server = app.listen(process.env.PORT || 8000, function() {
         var port = server.address().port;
@@ -49,11 +48,6 @@ var paintingAttributes = mongoose.Schema({
 var UserProfile = mongoose.model('UserProfile', userProfile);
 var PaintingAttributes = mongoose.model('PaintingAttributes', paintingAttributes)
 
-// Why doesn't this work?
-// app.get('/', function(req, response) {
-//     response.json({ text: "Hello world" });
-// });
-
 // Creates New User Profile, adding start-kit artworks
 app.post('/newUser', function(req, response) {
     UserProfile.create({
@@ -72,12 +66,10 @@ app.post('/newUser', function(req, response) {
             if (err) {
                 return response.status(500).json(err)
             }
-            console.log('this is the starter_kit', starter_kit)
             urls = starter_kit.map(function(obj) {
                 //TODO - homework: map functions in javscript - functional programming
                 return obj.url;
             })
-            console.log('this is the urls mapped. take a look------', urls);
             UserProfile.update({ _id: newUser._id }, { artWorksOnRotation: starter_kit }, function(err, updatedUser) {
                 if (err) {
                     console.log(err, 'error');
