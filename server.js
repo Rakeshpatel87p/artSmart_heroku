@@ -10,9 +10,6 @@ var express = require('express'),
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 // app.use(express.static(__dirname));
-// Needed?
-// app.use('/lib', express.static(__dirname + '/bower_components'));
-// app.use('/server.js', express.static(__dirname + '/server.js'));
 
 mongoose.connect('mongodb://Rakeshpatel87p:printer1@ds023644.mlab.com:23644/art_smart', function(err, database) {
     if (err) {
@@ -67,7 +64,6 @@ app.post('/newUser', function(req, response) {
                 return response.status(500).json(err)
             }
             urls = starter_kit.map(function(obj) {
-                //TODO - homework: map functions in javscript - functional programming
                 return obj.url;
             })
             UserProfile.update({ _id: newUser._id }, { artWorksOnRotation: starter_kit }, function(err, updatedUser) {
@@ -118,6 +114,12 @@ app.get('/artworks/:id', function(req, response) {
         });
 });
 
+// Update User Painting
+// similar_to_artwork_id reproduces same results for every painting - NOT viable
+// similar_to_artist_id does not work either
+// Change API:  Harvard Art Museum (submitted request); 
+//              Walters Art Museum (account created);
+//              NY Public Library
 app.get('/:user/paintingsToDisplay', function(req, response) {
     var user = req.params.user
     UserProfile.findOne({ user: user }, function(err, user) {
