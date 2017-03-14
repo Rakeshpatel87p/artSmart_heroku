@@ -9,7 +9,7 @@ var express = require('express'),
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }))
-// app.use(express.static(__dirname));
+    // app.use(express.static(__dirname));
 
 mongoose.connect('mongodb://Rakeshpatel87p:printer1@ds023644.mlab.com:23644/art_smart', function(err, database) {
     if (err) {
@@ -36,7 +36,7 @@ var paintingAttributes = mongoose.Schema({
     image_id: { type: String },
     title: { type: String },
     date: { type: String },
-    artist: {type: String},
+    artist: { type: String },
     collecting_institution: { type: String },
     url: { type: String },
     special_notes: { type: String }
@@ -120,6 +120,20 @@ app.get('/artworks/:id', function(req, response) {
 // Change API:  Harvard Art Museum (submitted request); 
 //              Walters Art Museum (account created);
 //              NY Public Library
+app.get('/paintingToDisplay', function(req, response) {
+    unirest.post('https://api.artsy.net/api/tokens/xapp_token')
+        .headers({ 'Accept': 'application/json' })
+        .send({ "client_id": "cd7051715d376f899232", "client_secret": "de9378d3d12c2cbfb24221e8b96d212c" })
+        .end(function(res) {
+            // What additional artworks will I provide?
+            unirest.get('https://api.artsy.net/api/artworks?sample=1')
+                .headers({ 'Accept': 'application/json', 'X-XAPP-Token': res.body.token })
+                .end(function(res_) {
+                    console.log(res_.body)
+                    response.json(res_.body)
+                })
+        });
+})
 app.get('/:user/paintingsToDisplay', function(req, response) {
     var user = req.params.user
     UserProfile.findOne({ user: user }, function(err, user) {
