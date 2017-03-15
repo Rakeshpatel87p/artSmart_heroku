@@ -133,7 +133,8 @@ app.get('/paintingToDisplay', function(req, response) {
                     response.json(res_.body)
                 })
         });
-})
+});
+
 app.get('/:user/paintingsToDisplay', function(req, response) {
     var user = req.params.user
     UserProfile.findOne({ user: user }, function(err, user) {
